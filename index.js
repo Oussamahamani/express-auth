@@ -65,20 +65,40 @@ app.post("/api/signin",async (req,res)=>{
     }
 })
 
-app.get("/users",async(req,res)=>{
-    let token = req.header("Authorization")
+const checkIfAuthenticated= (req,res,next)=>{
     try {
+        
+        let token = req.header("Authorization")
         token = token.replace("Bearer ","")
-       let payload= jwt.verify(token,process.env.secret)
-        console.log("🚀 ~ app.get ~ token:", payload)
+  let payload= jwt.verify(token,process.env.secret)
+        // console.log("🚀 ~ app.get ~ token:", payload)
+        req.payload = payload
+        next()
+    } catch (error) {
+        res.send("you need to log in")
+    }
+
+}
+
+app.get("/users",checkIfAuthenticated ,async(req,res)=>{
+  
+  
         let users = await User.find({})
         res.send(users)
         
-    } catch (error) {
-        console.log("🚀 ~ app.get ~ error:", error)
-        res.send("You are not loggedIn")
-    }
+  
 })
+
+app.get("/users/:id",checkIfAuthenticated,async(req,res)=>{
+    console.log(req.payload.id)
+    let user = await User.findById(req.params.id)
+    if(user._id.toString() !== req.payload.id){
+        res.send("you are not "+ user.userName)
+        return
+    }
+    res.send(user)
+})
+
 app.listen(port, () => {
     console.log('Listening on port: ', port)
     connectDB()
