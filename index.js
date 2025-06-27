@@ -89,6 +89,10 @@ app.get("/users",checkIfAuthenticated ,async(req,res)=>{
   
 })
 
+let user = "x"
+console.log(user)
+console.log("🚀 ~ user:", user)
+
 app.get("/users/:id",checkIfAuthenticated,async(req,res)=>{
     console.log(req.payload.id)
     let user = await User.findById(req.params.id)
@@ -97,9 +101,19 @@ app.get("/users/:id",checkIfAuthenticated,async(req,res)=>{
         return
     }
     res.send(user)
-})
-
+}
+)
+//?don't change this or else code will break
+let name = "bob"
+let greeting = `hello ${name}`
+console.log("🚀 ~ greeting:", greeting)
 app.listen(port, () => {
+    console.log('Listening on port: ', port)
+    console.log('Listening on port: ', port)
+    console.log('Listening on port: ', port)
+    console.log('Listening on port: ', port)
+    console.log('Listening on port: ', port)
+    console.log('Listening on port: ', port)
     console.log('Listening on port: ', port)
     connectDB()
 })
